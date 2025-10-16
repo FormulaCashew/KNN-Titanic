@@ -105,42 +105,43 @@ class DataFrameImputation:
 
             plt.show()
 
-        def compare_distributions(df1:pd.DataFrame, df2:pd.DataFrame, columns:list, labels:tuple, plot_type:str="hist", save_path:str=None):
-            """
-            Compare distributions of two dataframes.
-            Args:
-                df1 (pd.DataFrame): First dataframe to be compared.
-                df2 (pd.DataFrame): Second dataframe to be compared.
-                columns (list): List of column names.
-                labels (tuple): Tuple of column names.
-                plot_type (str, optional): Plot type. Defaults to "hist".
-                save_path (str, optional): Path to save the figure. Defaults to None.
-            """
-            for c in columns:
-                d1 = pd.to_numeric(df1[c], errors='coerce').dropna()
-                d2 = pd.to_numeric(df2[c], errors='coerce').dropna()
+    @staticmethod
+    def compare_distributions(df1:pd.DataFrame, df2:pd.DataFrame, columns:list, labels:tuple, plot_type:str="hist", save_path:str=None):
+        """
+        Compare distributions of two dataframes.
+        Args:
+            df1 (pd.DataFrame): First dataframe to be compared.
+            df2 (pd.DataFrame): Second dataframe to be compared.
+            columns (list): List of column names.
+            labels (tuple): Tuple of column names.
+            plot_type (str, optional): Plot type. Defaults to "hist".
+            save_path (str, optional): Path to save the figure. Defaults to None.
+        """
+        for c in columns:
+            d1 = pd.to_numeric(df1[c], errors='coerce').dropna()
+            d2 = pd.to_numeric(df2[c], errors='coerce').dropna()
 
-                figure, axs = plt.subplots(nrows=1, ncols=2, figsize=(12, 5), sharex=True, sharey=(plot_type=="hist"))
-                title_prefix = f"{plot_type} Comparison of {c}"
+            figure, axs = plt.subplots(nrows=1, ncols=2, figsize=(12, 5), sharex=True, sharey=(plot_type=="hist"))
+            title_prefix = f"{plot_type} Comparison of {c}"
 
-                if plot_type == "hist":
-                    sns.histplot(data=d1, ax=axs[0], bins=30, alpha=0.7, label=labels[0])
-                    sns.histplot(data=d2, ax=axs[1], bins=30, alpha=0.7, label=labels[1])
-                elif plot_type == "box":
-                    sns.boxplot(x=d1, ax=axs[0], label=labels[0], width=0.5)
-                    sns.boxplot(x=d2, ax=axs[1], label=labels[1], width=0.5)
-                else:
-                    raise ValueError(f"Invalid plot type: {plot_type}")
+            if plot_type == "hist":
+                sns.histplot(data=d1, ax=axs[0], bins=30, alpha=0.7, label=labels[0])
+                sns.histplot(data=d2, ax=axs[1], bins=30, alpha=0.7, label=labels[1])
+            elif plot_type == "box":
+                sns.boxplot(x=d1, ax=axs[0], label=labels[0], width=0.5)
+                sns.boxplot(x=d2, ax=axs[1], label=labels[1], width=0.5)
+            else:
+                raise ValueError(f"Invalid plot type: {plot_type}")
 
-                axs[0].set_title(f"{labels[0]}")
-                axs[1].set_title(f"{labels[1]}")
+            axs[0].set_title(f"{labels[0]}")
+            axs[1].set_title(f"{labels[1]}")
 
-                plt.suptitle(title_prefix, fontsize=14)
-                plt.tight_layout(rect=(0, 0.03, 1, 0.95))
+            plt.suptitle(title_prefix, fontsize=14)
+            plt.tight_layout(rect=(0, 0.03, 1, 0.95))
 
-                if save_path is not None:
-                    file_save_path = f"{save_path}_{c}.png"
-                    plt.savefig(file_save_path, format="png", dpi=300)
-                    print("Saved plot to: '{file_path}'")
+            if save_path is not None:
+                file_save_path = f"{save_path}_{c}.png"
+                plt.savefig(file_save_path, format="png", dpi=300)
+                print("Saved plot to: '{file_path}'")
 
-                plt.show()
+            plt.show()
