@@ -35,16 +35,20 @@ class KNN:
         Predicts an output given various inputs data
         Args:
             inputs (pandas.DataFrame): input data
+        Returns:
+            pandas.DataFrame: predicted outputs
         """
         inputs_arr = np.array(inputs)
-        predicts = [self.predict_single(input) for input in inputs_arr]
-        return
+        predicts = [self.predict_single(input) for input in inputs_arr] # List with various outputs
+        return predicts
 
     def predict_single(self, input_test):
         """
         Function to predict the output given single input data row
         Args:
             input_test (pandas.DataFrame): input data, needs to have the Attributes of the training data
+        Returns:
+            pandas.DataFrame: predicted outputs
         """
         distances = []
         for i, input_row in enumerate(self.inputs_train):
