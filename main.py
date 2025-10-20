@@ -46,6 +46,8 @@ def fill_data(df: pd.DataFrame, exclusions : list = None) -> pd.DataFrame:
 
 def main():
     init_df = pd.read_csv(path_to_df)
+
+    #imputation
     titanic_df = fill_data(init_df, ['deck', 'embark_town', 'boat', 'body', 'home.dest']) # when there is incomplete data
 
     # Encode sex
@@ -74,5 +76,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # The main features are: survived, sex, age, sibsp, parch, fare, pclass
     main()
