@@ -6,6 +6,24 @@ from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.preprocessing import StandardScaler
 
 class DataFrameImputation:
+    """
+    A class to do data imputation, processing, and analysis tasks.
+    This processor provides operations like imputation, normalization, and visualization
+    on a pandas DataFrame.
+
+    Attributes:
+        original_df (pd.DataFrame): A copy of the initial DataFrame for reference.
+        df (pd.DataFrame): The currently processed DataFrame.
+
+    Functions:
+        get_df(): Returns a copy of the current DataFrame.
+        reset_df(): Resets the DataFrame to its original state.
+        impute_data(method, k_neighbors): Fills missing values in the data.
+        normalize(): Applies StandardScaler to numeric columns.
+        column_resume(): Generates a summary of column dtypes and missing values.
+        plot_distribution(cols, prefix, save_path): Plots distributions for columns.
+        compare_distributions(df1, df2, ...): Statically compares two DataFrames.
+    """
     def __init__(self, dataframe: pd.DataFrame):
         """
         Initialize DataFrame imputation
