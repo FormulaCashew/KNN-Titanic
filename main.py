@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 from Imputation import DataFrameImputation
+from KNN_Model import KNN
 
 path_to_df = "../../Datasets/titanic.csv"
 
