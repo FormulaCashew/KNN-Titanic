@@ -11,12 +11,15 @@ class KNN:
     Class KNN_Model with methods to implement KNN_Model
 
     """
+
     def __init__(self, k: int = 3):
         """
         Constructor of KNN_Model
         Args:
             k (int): number of neighbors to use, defaults to 3, it is recommended to use an odd number
         """
+        self._outputs_train = None
+        self._inputs_train = None
         self.k = k
 
     def store(self, inputs_train, outputs_train):
@@ -26,8 +29,8 @@ class KNN:
             inputs_train (pandas.DataFrame): training data inputs
             outputs_train (pandas.DataFrame): training data outputs
         """
-        self.inputs_train = inputs_train
-        self.outputs_train = outputs_train
+        self._inputs_train = inputs_train
+        self._outputs_train = outputs_train
         print("Training data stored")
 
     def predict(self, inputs):
@@ -51,9 +54,9 @@ class KNN:
             pandas.DataFrame: predicted outputs
         """
         distances = []
-        for i, input_row in enumerate(self.inputs_train):
+        for i, input_row in enumerate(self._inputs_train):
             dist = self.euclidean_distance(input_row, input_test)   # measure distance between given inputs and local data
-            distances.append((dist, self.outputs_train[i])) # save distance and output data
+            distances.append((dist, self._outputs_train[i])) # save distance and output data
 
         sorted_distances = sorted(distances, key=lambda x: x[0])
         nearest_neighbors = sorted_distances[:self.k] # get only the distances up to k
