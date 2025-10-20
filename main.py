@@ -68,7 +68,7 @@ def main():
     predictions = knn_model.predict(inputs_test)
     correct_predictions = np.sum(predictions == np.array(outputs_test))
     accuracy = correct_predictions / len(outputs_test)
-    print(f"Accuracy on the test set: {accuracy:.4f}")
+    print(f"Accuracy on the test set: {accuracy:.3f}")
 
 
 
