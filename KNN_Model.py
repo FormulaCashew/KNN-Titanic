@@ -29,8 +29,8 @@ class KNN:
             inputs_train (pandas.DataFrame): training data inputs
             outputs_train (pandas.DataFrame): training data outputs
         """
-        self._inputs_train = inputs_train
-        self._outputs_train = outputs_train
+        self._inputs_train = np.array(inputs_train)
+        self._outputs_train = np.array(outputs_train)
         print("Training data stored")
 
     def predict(self, inputs):
@@ -42,8 +42,8 @@ class KNN:
             pandas.DataFrame: predicted outputs
         """
         inputs_arr = np.array(inputs)
-        predicts = [self.predict_single(input) for input in inputs_arr] # List with various outputs
-        return predicts
+        predictions = [self.predict_single(input_row) for input_row in inputs_arr] # List with various outputs
+        return predictions
 
     def predict_single(self, input_test):
         """
@@ -60,11 +60,11 @@ class KNN:
 
         sorted_distances = sorted(distances, key=lambda x: x[0])
         nearest_neighbors = sorted_distances[:self.k] # get only the distances up to k
-        nearest_neighbor_label = [neighbor[1] for neighbor in nearest_neighbors]
-        survived = Counter(nearest_neighbor_label).most_common(1)[0] # Check for most common output in the neighbors
+        nearest_neighbor_labels = [neighbor[1] for neighbor in nearest_neighbors]
+        survived = Counter(nearest_neighbor_labels).most_common(1)[0] # Check for most common output in the neighbors
         return survived[0]
 
 
     @staticmethod
     def euclidean_distance(p1, p2):
-        return np.linalg.norm(p1 - p2)
+        return np.sqrt(np.sum((p1 - p2)**2))
