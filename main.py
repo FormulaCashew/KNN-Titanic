@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib as plt
 import seaborn as sns
 import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from Imputation import DataFrameImputation
@@ -49,11 +50,25 @@ def main():
 
     # Encode sex
     titanic_df['sex'] = titanic_df['sex'].map({'male': 0, 'female': 1})
+
+    # The main features are: age, fare, pclass, sex, sibsp, parch
     features = ['age', 'fare', 'pclass', 'sex', 'sibsp', 'parch']
     to_find = 'survived'
 
     inputs = titanic_df[features]
     outputs = titanic_df[to_find]
+
+    # Split data to test for precision
+    inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(inputs, outputs, test_size=0.2, random_state=42, stratify = outputs)
+
+
+    knn_model : KNN = KNN(k=3)
+
+    knn_model.store(inputs_train, outputs_train)
+    predictions = knn_model.predict(inputs_test)
+    correct_predictions = np.sum(predictions == np.array(outputs_test))
+    accuracy = correct_predictions / len(outputs_test)
+    print(f"Accuracy on the test set: {accuracy:.4f}")
 
 
 
