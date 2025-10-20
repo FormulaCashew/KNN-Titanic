@@ -40,8 +40,12 @@ class KNN:
         predicts = [self.predict_single(input) for input in inputs_arr]
         return
 
-    def predict_single(self, input_test) -> float:
-        survived = 0.0
+    def predict_single(self, input_test):
+        """
+        Function to predict the output given single input data row
+        Args:
+            input_test (pandas.DataFrame): input data, needs to have the Attributes of the training data
+        """
         distances = []
         for i, input_row in enumerate(self.inputs_train):
             dist = self.euclidean_distance(input_row, input_test)   # measure distance between given inputs and local data
@@ -50,8 +54,8 @@ class KNN:
         sorted_distances = sorted(distances, key=lambda x: x[0])
         nearest_neighbors = sorted_distances[:self.k] # get only the distances up to k
         nearest_neighbor_label = [neighbor[1] for neighbor in nearest_neighbors]
-        most_common = Counter(nearest_neighbor_label).most_common(1)[0]
-        return most_common[0]
+        survived = Counter(nearest_neighbor_label).most_common(1)[0] # Check for most common output in the neighbors
+        return survived[0]
 
 
     @staticmethod
