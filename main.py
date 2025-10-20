@@ -4,32 +4,59 @@ import numpy as np
 import matplotlib as plt
 import seaborn as sns
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
 from Imputation import DataFrameImputation
 
 path_to_df = "../../Datasets/titanic.csv"
 
-def main():
-    titanic_df = pd.read_csv(path_to_df)
-    print(titanic_df.head())
+def fill_data(df: pd.DataFrame, exclusions : list = None) -> pd.DataFrame:
+
+    """
+    Simple function to fill missing values in a dataframe by doing an imputation
+    Args:
+        df (pd.DataFrame): Dataframe to fill
+        exclusions (list): List of column names to exclude
+    Returns:
+        pd.DataFrame: Dataframe filled
+    """
+
+    # Process starting data
+    print(df.head())
+    # Drop not necessary values
+    df = df.drop(columns=exclusions)
     # Data needs to be imputed
-    imputator = DataFrameImputation(titanic_df)
+    imputator = DataFrameImputation(df)
     print(imputator.column_resume())
-
     imputator.plot_distribution(cols=['age', 'fare'], prefix="Before")
-    imputator.impute_data(method='median')
-
+    imputator.impute_data(method='knn')
     imputed_df = imputator.get_df()
     print(imputed_df.head())
-
     imputator.compare_distributions(imputator.original_df, imputed_df, columns=['age'], labels=('Before', 'After'), plot_type='hist')
     imputator.compare_distributions(imputator.original_df, imputed_df, columns=['age'], labels = ('Before', 'After'), plot_type='box')
-
     output_filename = 'titanic_imputed.csv'
     try:
         imputed_df.to_csv(output_filename, index=False)
         print(f"Successfully saved the cleaned data to '{output_filename}'")
     except Exception as e:
         print(f"Error saving file: {e}")
+    return pd.read_csv(output_filename)
+
+def main():
+    init_df = pd.read_csv(path_to_df)
+    titanic_df = fill_data(init_df, ['deck', 'embark_town', 'boat', 'body', 'home.dest']) # when there is incomplete data
+
+    # Encode sex
+    titanic_df['sex'] = titanic_df['sex'].map({'male': 0, 'female': 1})
+    features = ['age', 'fare', 'pclass', 'sex', 'sibsp', 'parch']
+    to_find = 'survived'
+
+    inputs = titanic_df[features]
+    outputs = titanic_df[to_find]
+
+
+
 
 if __name__ == '__main__':
+    # The main features are: survived, sex, age, sibsp, parch, fare, pclass
     main()
