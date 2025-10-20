@@ -1,6 +1,10 @@
+from collections import Counter
+
 import numpy as np
 import pandas as pd
 import numpy as np
+from sklearn.metrics import euclidean_distances
+
 
 class KNN:
     """
@@ -22,12 +26,33 @@ class KNN:
             inputs_train (pandas.DataFrame): training data inputs
             outputs_train (pandas.DataFrame): training data outputs
         """
-        self.x_train = inputs_train
-        self.y_train = outputs_train
+        self.inputs_train = inputs_train
+        self.outputs_train = outputs_train
         print("Training data stored")
 
-    def search(self, df: pd.DataFrame):
-        cols = df.columns.tolist()
+    def predict(self, inputs):
+        """
+        Predicts an output given various inputs data
+        Args:
+            inputs (pandas.DataFrame): input data
+        """
+        inputs_arr = np.array(inputs)
+        predicts = [self.predict_single(input) for input in inputs_arr]
+        return
+
+    def predict_single(self, input_test) -> float:
+        survived = 0.0
+        distances = []
+        for i, input_row in enumerate(self.inputs_train):
+            dist = self.euclidean_distance(input_row, input_test)   # measure distance between given inputs and local data
+            distances.append((dist, self.outputs_train[i])) # save distance and output data
+
+        sorted_distances = sorted(distances, key=lambda x: x[0])
+        nearest_neighbors = sorted_distances[:self.k] # get only the distances up to k
+        nearest_neighbor_label = [neighbor[1] for neighbor in nearest_neighbors]
+        most_common = Counter(nearest_neighbor_label).most_common(1)[0]
+        return most_common[0]
+
 
     @staticmethod
     def euclidean_distance(p1, p2):
