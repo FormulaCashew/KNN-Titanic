@@ -1,10 +1,6 @@
 from collections import Counter
 
 import numpy as np
-import pandas as pd
-import numpy as np
-from sklearn.metrics import euclidean_distances
-
 
 class KNN:
     """

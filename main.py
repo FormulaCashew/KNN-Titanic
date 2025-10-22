@@ -1,5 +1,4 @@
 import os
-from platform import processor
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,7 +6,6 @@ import seaborn as sns
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
 from Imputation import DataFrameImputation
 from KNN_Model import KNN
@@ -122,7 +120,7 @@ def main():
 
     init_df.head()
     # Columns to drop
-    exclusions = ['deck', 'embark_town', 'boat', 'body', 'home.dest']
+    exclusions = ['deck', 'embark_town', 'boat', 'body', 'home.dest', 'fare']
 
     #imputation
     if impute_data:
@@ -138,7 +136,7 @@ def main():
         titanic_df.drop(columns=exclusions, errors='ignore')
 
     # The main features are: age, fare, pclass, sex, sibsp, parch
-    features = ['age', 'fare', 'pclass', 'sex', 'sibsp', 'parch']
+    features = ['age', 'pclass', 'sex', 'sibsp', 'parch']
     to_find = 'survived'
 
     inputs = titanic_df[features]
