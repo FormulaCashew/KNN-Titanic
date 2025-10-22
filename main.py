@@ -112,8 +112,8 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
     plt.ylabel('Error')
     plt.xticks(k_range)
     plt.legend()
+    plt.savefig("./elbow_error.png", dpi=400)
     plt.show()
-
     return errors.index(min(errors))
 
 
