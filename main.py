@@ -75,6 +75,45 @@ def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
         print(f"Error saving file: {e}")
     return imputed_df
 
+def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
+    # Sphynx style docstring
+    """
+    Function to calculate, and generate an elbow plot
+    :param x_train: Input training data
+    :type x_train: pd.DataFrame
+    :param x_test: Input test data
+    :type x_test: pd.DataFrame
+    :param y_train: Output training data
+    :type y_train: pd.DataFrame
+    :param y_test: Output testing data
+    :type y_test: pd.DataFrame
+    :param k_max: Maximum number of neighbors to use
+    :type k_max: int
+    :return:
+    """
+    errors = []
+
+    knn = KNN(k=1)
+    knn.store(x_train, y_train)
+    k_range = range(1, k_max)
+    for k in k_range:
+        knn.set_k(k)
+        knn.predict(x_test)
+        predictions = knn.predict(x_test)
+        accuracy = (np.sum(predictions == np.array(y_test)))/len(y_test)
+        error = 1 - accuracy
+        errors.append(error)
+        print(f"Error: {error:.4f} with k={k}")
+
+    plt.figure(figsize=(10, 10))
+    plt.plot(k_range, errors, label='Elbow method', marker='o')
+    plt.xlabel('Number of neighbors')
+    plt.ylabel('Error')
+    plt.xticks(k_range)
+    plt.legend()
+    plt.show()
+
+
 def main():
     init_df = pd.read_csv(path_to_df)
 
@@ -110,7 +149,7 @@ def main():
     # Split data to test for precision
     inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(normalized_inputs, outputs, test_size=0.2, stratify = outputs)
 
-    knn_model : KNN = KNN(k=3)
+    knn_model : KNN = KNN(k=13)
     knn_model.store(inputs_train, outputs_train)
 
     predictions = knn_model.predict(inputs_test)
@@ -119,6 +158,7 @@ def main():
     print(f"Accuracy on the test set: {accuracy:.3f}")
 
     plot_confusion_matrix(outputs_test, predictions)
+    plot_elbow(inputs_train, inputs_test, outputs_train, outputs_test, k_max = 20)
 
 if __name__ == '__main__':
     main()
