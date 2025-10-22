@@ -36,8 +36,8 @@ def plot_confusion_matrix(y_true, y_pred):
     plt.ylabel('Actual')
     plt.title("Correlation Matrix")
     plt.tight_layout()
-    plt.show()
     plt.savefig("./confusion_matrix.png", dpi=400)
+    plt.show()
 
 def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
     """
@@ -106,7 +106,7 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
         errors.append(error)
         print(f"Error: {error:.4f} with k={k}")
 
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(10, 15))
     plt.plot(k_range, errors, label='Elbow method', marker='o')
     plt.xlabel('Number of neighbors')
     plt.ylabel('Error')
