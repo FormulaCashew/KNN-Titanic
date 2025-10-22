@@ -1,6 +1,12 @@
 import os
-
+import sys
 import numpy as np
+
+if sys.platform == "linux":
+    print("Linux OS detected. Using non-interactive 'Agg' backend for Matplotlib.")
+    import matplotlib
+    matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
