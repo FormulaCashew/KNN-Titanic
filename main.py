@@ -89,7 +89,8 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
     :type y_test: pd.DataFrame
     :param k_max: Maximum number of neighbors to use
     :type k_max: int
-    :return:
+    :return optimal_k: Optimal k value to use
+    :rtype optimal_k: int
     """
     errors = []
 
@@ -112,6 +113,8 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
     plt.xticks(k_range)
     plt.legend()
     plt.show()
+
+    return errors.index(min(errors))
 
 
 def main():
