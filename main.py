@@ -1,3 +1,4 @@
+import os
 from platform import processor
 
 import numpy as np
@@ -10,12 +11,66 @@ from sklearn.preprocessing import LabelEncoder
 from Imputation import DataFrameImputation
 from KNN_Model import KNN
 
-def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
+# Define
+impute_data = True
+path_to_df = "../../Datasets/titanic.csv"
 
+def main():
+    init_df = pd.read_csv(path_to_df)
+
+    init_df.head()
+    # Columns to drop
+    exclusions = ['deck', 'embark_town', 'boat', 'body', 'home.dest']
+
+    #imputation
+    if impute_data:
+        if os.path.exists("./titanic_imputed.csv"):
+            titanic_df = pd.read_csv("./titanic_imputed.csv")  # load from existing file
+        else:
+            titanic_df = fill_data(init_df, exclusions)  # when there is incomplete data and load it
+    else:
+        # Without imputation data
+        titanic_df = pd.read_csv(path_to_df)
+        titanic_df['sex'] = titanic_df['sex'].map({'male': 0, 'female': 1})
+        titanic_df.dropna()
+        titanic_df.drop(columns=exclusions, errors='ignore')
+
+    # The main features are: age, fare, pclass, sex, sibsp, parch
+    features = ['age', 'fare', 'pclass', 'sex', 'sibsp', 'parch']
+    to_find = 'survived'
+
+    inputs = titanic_df[features]
+    outputs = titanic_df[to_find]
+
+    # Normalize only the inputs
+    process = DataFrameImputation(inputs)
+    process.normalize()
+    normalized_inputs = process.get_df()
+
+    # Split data to test for precision
+    inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(normalized_inputs, outputs, test_size=0.2, stratify = outputs)
+
+    knn_model : KNN = KNN(k=3)
+    knn_model.store(inputs_train, outputs_train)
+
+    predictions = knn_model.predict(inputs_test)
+    correct_predictions = np.sum(predictions == np.array(outputs_test))
+    accuracy = correct_predictions / len(outputs_test)
+    print(f"Accuracy on the test set: {accuracy:.3f}")
+
+    for item in predictions:
+        print(item)
+
+if __name__ == '__main__':
+    main()
+
+def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
     """
     Simple function to fill missing values in a dataframe by doing an imputation
+    Uses DataFrameImputation class which is a local class made for this code, should be able to work with other dataframes
     Args:
         df (pd.DataFrame): Dataframe to fill
+        exclusions (list): List of column names to exclude
     Returns:
         pd.DataFrame: Dataframe filled
     """
@@ -44,42 +99,3 @@ def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
     except Exception as e:
         print(f"Error saving file: {e}")
     return imputed_df
-
-def main():
-    path_to_df = "../../Datasets/titanic.csv"
-    init_df = pd.read_csv(path_to_df)
-
-    #imputation
-    exclusions = ['deck', 'embark_town', 'boat', 'body', 'home.dest']
-    #titanic_df = fill_data(init_df, exclusions) # when there is incomplete data
-    titanic_df = pd.read_csv("./titanic_imputed.csv")
-
-    # The main features are: age, fare, pclass, sex, sibsp, parch
-    features = ['age', 'fare', 'pclass', 'sex', 'sibsp', 'parch']
-    to_find = 'survived'
-
-    inputs = titanic_df[features]
-    outputs = titanic_df[to_find]
-
-    # Normalize only the inputs
-    process = DataFrameImputation(inputs)
-    process.normalize()
-    normalized_inputs = process.get_df()
-
-    # Split data to test for precision
-    inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(normalized_inputs, outputs, test_size=0.2, stratify = outputs)
-
-
-    knn_model : KNN = KNN(k=5)
-    knn_model.store(inputs_train, outputs_train)
-
-    predictions = knn_model.predict(inputs_test)
-    correct_predictions = np.sum(predictions == np.array(outputs_test))
-    accuracy = correct_predictions / len(outputs_test)
-    print(f"Accuracy on the test set: {accuracy:.3f}")
-
-
-
-
-if __name__ == '__main__':
-    main()
