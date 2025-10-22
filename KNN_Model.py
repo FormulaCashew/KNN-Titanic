@@ -20,7 +20,11 @@ class KNN:
         """
         self._outputs_train = None
         self._inputs_train = None
-        self.k = k
+        self._k = k
+
+    def set_k(self, k: int):
+        """ Simple setter for k neighbors"""
+        self._k = k
 
     def store(self, inputs_train, outputs_train):
         """
@@ -59,7 +63,7 @@ class KNN:
             distances.append((dist, self._outputs_train[i])) # save distance and output data
 
         sorted_distances = sorted(distances, key=lambda x: x[0])
-        nearest_neighbors = sorted_distances[:self.k] # get only the distances up to k
+        nearest_neighbors = sorted_distances[:self._k] # get only the distances up to k
         nearest_neighbor_labels = [neighbor[1] for neighbor in nearest_neighbors]
         survived = Counter(nearest_neighbor_labels).most_common(1)[0] # Check for most common output in the neighbors
         return survived[0]
