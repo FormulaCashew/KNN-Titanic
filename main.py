@@ -36,7 +36,7 @@ def plot_confusion_matrix(y_true, y_pred):
     plt.ylabel('Actual')
     plt.title("Correlation Matrix")
     plt.tight_layout()
-    plt.savefig("./confusion_matrix.png", dpi=400)
+    plt.savefig("./confusion_matrix.svg")
     plt.show()
 
 def fill_data(df: pd.DataFrame, exclusions: list = None) -> pd.DataFrame:
@@ -112,7 +112,7 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
     plt.ylabel('Error')
     plt.xticks(k_range)
     plt.legend()
-    plt.savefig("./elbow_error.png", dpi=400)
+    plt.savefig("./elbow_error.svg")
     plt.show()
     return errors.index(min(errors))
 
