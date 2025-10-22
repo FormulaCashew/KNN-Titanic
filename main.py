@@ -100,7 +100,7 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
 
     knn = KNN(k=1)
     knn.store(x_train, y_train)
-    k_range = range(1, k_max)
+    k_range = range(1, k_max+1)
     for k in k_range:
         knn.set_k(k)
         knn.predict(x_test)
@@ -120,6 +120,33 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
     plt.show()
     return errors.index(min(errors))
 
+def plot_survivor_characteristics(df: pd.DataFrame):
+    """
+    Genera gráficas de barras para comparar las características
+    de los supervivientes frente a los no supervivientes.
+
+    Utiliza las columnas 'sex' (0=Hombre, 1=Mujer), 'pclass' y 'survived'.
+    """
+
+    plot_df = df.copy()
+    plot_df['sex'] = plot_df['sex'].map({0: 'Hombre', 1: 'Mujer'})
+    fig, axs = plt.subplots(1, 2, figsize=(16, 7))
+    sns.countplot(data=plot_df, x='sex', hue='survived', ax=axs[0], palette='Blues_d')
+    axs[0].set_title('Supervivencia por Género', fontsize=14)
+    axs[0].set_xlabel('Género')
+    axs[0].set_ylabel('Cantidad de Pasajeros')
+    axs[0].legend(title='Sobrevivió', labels=['No (0)', 'Sí (1)'])
+
+    sns.countplot(data=plot_df, x='pclass', hue='survived', ax=axs[1], palette='Greens_d')
+    axs[1].set_title('Supervivencia por Clase de Pasajero', fontsize=14)
+    axs[1].set_xlabel('Clase (pclass)')
+    axs[1].set_ylabel('Cantidad de Pasajeros')
+    axs[1].legend(title='Sobrevivió', labels=['No (0)', 'Sí (1)'])
+
+    plt.suptitle('Análisis de Características de Supervivientes vs. No Supervivientes', fontsize=18)
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig("./main_survivor_char.png", dpi=300)
+    plt.show()
 
 def main():
     init_df = pd.read_csv(path_to_df)
@@ -140,6 +167,8 @@ def main():
         titanic_df['sex'] = titanic_df['sex'].map({'male': 0, 'female': 1})
         titanic_df.dropna()
         titanic_df.drop(columns=exclusions, errors='ignore')
+
+    plot_survivor_characteristics(titanic_df)
 
     # The main features are: age, fare, pclass, sex, sibsp, parch
     features = ['age', 'pclass', 'sex', 'sibsp', 'parch']
