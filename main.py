@@ -150,7 +150,7 @@ def main():
     normalized_inputs = process.get_df()
 
     # Split data to test for precision
-    inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(normalized_inputs, outputs, test_size=0.2, stratify = outputs)
+    inputs_train, inputs_test, outputs_train, outputs_test = train_test_split(normalized_inputs, outputs, test_size=0.2, random_state=42, stratify = outputs)
 
     knn_model : KNN = KNN(k=13)
     knn_model.store(inputs_train, outputs_train)
