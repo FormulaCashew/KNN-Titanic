@@ -25,7 +25,7 @@ def plot_confusion_matrix(y_true, y_pred):
     """
     # Confusion matrix
     correlation_mat = confusion_matrix(y_true, y_pred)
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(12, 10))
     sns.heatmap(data=correlation_mat,
                 annot=True,
                 fmt="d",
@@ -106,7 +106,7 @@ def plot_elbow(x_train, x_test, y_train, y_test, k_max : int = 10):
         errors.append(error)
         print(f"Error: {error:.4f} with k={k}")
 
-    plt.figure(figsize=(10, 15))
+    plt.figure(figsize=(15, 10))
     plt.plot(k_range, errors, label='Elbow method', marker='o')
     plt.xlabel('Number of neighbors')
     plt.ylabel('Error')
